@@ -13,15 +13,17 @@ exports.registrarUsuario = async (req, res) => {
             [name, email, hashedPassword],
             function(err) {
                 if (err) {
-                    if (err.errno === 19) return res.status(400).send("E-mail já cadastrado.");
-                    return res.status(500).send("Erro interno.");
+                    if (err.errno === 19) {
+                        return res.render('auth', { erro: "Este e-mail já está cadastrado." });
+                    }
+                    return res.render('auth', { erro: "Erro interno ao criar conta." });
                 }
                 req.session.userId = this.lastID;
-                res.redirect('/tracker');
+                res.redirect('/');
             }
         );
     } catch (error) {
-        res.status(500).send("Erro ao processar a senha.");
+        res.render('auth', { erro: "Erro ao processar o cadastro." });
     }
 };
 
