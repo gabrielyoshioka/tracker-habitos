@@ -1,0 +1,39 @@
+<div class="modal fade" id="modalRotina" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content rounded-4 border-0 shadow">
+            <div class="modal-header border-0 pb-0">
+                <h5 class="modal-title fw-bold fs-4 text-dark">Nova rotina</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body pt-3">
+                <form action="/rotinas" method="POST">
+                    <div class="mb-4">
+                        <input type="text" name="name" class="form-control form-control-lg bg-light border-0" placeholder="Ex: Manhã Produtiva, Treino, Estudos" required>
+                    </div>
+                    <div class="mb-4">
+                        <label class="form-label fw-bold small text-muted mb-3">Incluir hábitos</label>
+                        <% if (habitosExistentes && habitosExistentes.length > 0) { %>
+                            <div class="d-flex flex-column gap-2 pe-2" style="max-height: 180px; overflow-y: auto;">
+                                <% habitosExistentes.forEach(habito => { %>
+                                    <label class="d-flex align-items-center gap-3 p-2 border rounded-3 bg-white" style="cursor: pointer;">
+                                        <input class="form-check-input flex-shrink-0 m-0" type="checkbox" name="habitos_associados" value="<%= habito.id %>">
+                                        <span class="text-dark fw-medium"><%= habito.name %></span>
+                                    </label>
+                                <% }) %>
+                            </div>
+                        <% } else { %>
+                            <div class="p-3 bg-light rounded-3 text-center">
+                                <p class="text-secondary small mb-0">Você ainda não possui hábitos cadastrados para incluir.</p>
+                            </div>
+                        <% } %>
+                    </div>
+
+                    <div class="d-flex gap-2 justify-content-end mt-4">
+                        <button type="button" class="btn btn-light fw-bold text-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-brand fw-bold px-4">Salvar rotina</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
