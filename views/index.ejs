@@ -19,15 +19,22 @@
                         <h2 class="fw-bold mb-4 text-dark">Meu dia</h2>
                         
                         <% if (habitosHoje && habitosHoje.length > 0) { %>
-                            <div class="d-flex flex-column gap-3 pe-4">
+                            <div class="d-flex flex-column gap-3 pe-4" id="lista-habitos">
                                 <% habitosHoje.forEach(habito => { %>
-                                    <label class="d-flex align-items-center gap-3 p-3 border rounded-3 bg-white shadow-sm" style="cursor: pointer;">
-                                        <input class="form-check-input flex-shrink-0 m-0 fs-5" type="checkbox" value="<%= habito.id %>">
-                                        <span class="text-dark fs-5 fw-medium"><%= habito.name %></span>
+                                    <label class="d-flex align-items-center gap-3 p-3 border rounded-3 bg-white shadow-sm" style="cursor: pointer; transition: 0.3s;">
+                                        <input class="form-check-input flex-shrink-0 m-0 fs-5 checkbox-habito" 
+                                            type="checkbox" 
+                                            value="<%= habito.id %>"
+                                            <%= habito.is_completed ? 'checked' : '' %>>
+                                    
+                                        <span class="text-dark fs-5 fw-medium texto-habito <%= habito.is_completed ? 'text-decoration-line-through text-muted' : '' %>">
+                                            <%= habito.name %>
+                                        </span>
                                     </label>
                                 <% }) %>
                             </div>
                             
+                            <!-- CORRIGIDO: Botão adicionado para o usuário continuar criando hábitos -->
                             <button class="btn btn-outline-brand px-4 py-2 mt-4" data-bs-toggle="modal" data-bs-target="#modalHabito">
                                 <i class="bi bi-plus"></i> Novo hábito
                             </button>
@@ -68,5 +75,6 @@
     <%- include('partials/modalRotina') %>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/js/dashboard.js"></script>
 </body>
 </html>
