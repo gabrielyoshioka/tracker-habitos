@@ -1,8 +1,10 @@
 const express = require('express');
 const session = require('express-session');
+
 const authRoutes = require('./routes/authRoutes');
 const dashboardRoutes = require('./routes/dashboardRoutes');
 const habitoRoutes = require('./routes/habitoRoutes');
+const rotinaRoutes = require('./routes/rotinaRoutes');
 
 const app = express();
 
@@ -20,6 +22,7 @@ app.use(session({
 app.use('/', authRoutes);
 app.use('/', dashboardRoutes);
 app.use('/', habitoRoutes);
+app.use('/', rotinaRoutes);
 
 app.listen(3000, () => {
     console.log('Acesse no navegador: http://localhost:3000');

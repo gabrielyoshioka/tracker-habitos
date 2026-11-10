@@ -1,39 +1,40 @@
-<div class="modal fade" id="modalRotina" tabindex="-1" aria-hidden="true">
+<div class="modal fade" id="modalRotina" tabindex="-1" aria-labelledby="modalRotinaLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content rounded-4 border-0 shadow">
-            <div class="modal-header border-0 pb-0">
-                <h5 class="modal-title fw-bold fs-4 text-dark">Nova rotina</h5>
+        <div class="modal-content border-0 shadow">
+            <div class="modal-header border-bottom-0 pb-0">
+                <h5 class="modal-title fw-bold" id="modalRotinaLabel">Criar Nova Rotina</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body pt-3">
-                <form action="/rotinas" method="POST">
+            
+            <form action="/rotinas" method="POST">
+                <div class="modal-body py-4">
+                    
                     <div class="mb-4">
-                        <input type="text" name="name" class="form-control form-control-lg bg-light border-0" placeholder="Ex: Manhã Produtiva, Treino, Estudos" required>
+                        <label for="nomeRotina" class="form-label fw-medium">Nome da Rotina</label>
+                        <input type="text" class="form-control form-control-lg" id="nomeRotina" name="name" placeholder="Ex: Rotina Matinal, Treino..." required>
                     </div>
-                    <div class="mb-4">
-                        <label class="form-label fw-bold small text-muted mb-3">Incluir hábitos</label>
+
+                    <h6 class="fw-bold mb-3">Quais hábitos fazem parte dessa rotina?</h6>
+                    
+                    <div class="d-flex flex-column gap-2" style="max-height: 250px; overflow-y: auto;">
                         <% if (habitosExistentes && habitosExistentes.length > 0) { %>
-                            <div class="d-flex flex-column gap-2 pe-2" style="max-height: 180px; overflow-y: auto;">
-                                <% habitosExistentes.forEach(habito => { %>
-                                    <label class="d-flex align-items-center gap-3 p-2 border rounded-3 bg-white" style="cursor: pointer;">
-                                        <input class="form-check-input flex-shrink-0 m-0" type="checkbox" name="habitos_associados" value="<%= habito.id %>">
-                                        <span class="text-dark fw-medium"><%= habito.name %></span>
-                                    </label>
-                                <% }) %>
-                            </div>
+                            <% habitosExistentes.forEach(habito => { %>
+                                <label class="d-flex align-items-center gap-2 p-2 border rounded bg-light" style="cursor: pointer;">
+                                    <input class="form-check-input m-0" type="checkbox" name="habitos" value="<%= habito.id %>">
+                                    <span class="text-dark"><%= habito.name %></span>
+                                </label>
+                            <% }) %>
                         <% } else { %>
-                            <div class="p-3 bg-light rounded-3 text-center">
-                                <p class="text-secondary small mb-0">Você ainda não possui hábitos cadastrados para incluir.</p>
-                            </div>
+                            <p class="text-muted small">Você ainda não possui hábitos cadastrados. Crie hábitos primeiro.</p>
                         <% } %>
                     </div>
 
-                    <div class="d-flex gap-2 justify-content-end mt-4">
-                        <button type="button" class="btn btn-light fw-bold text-secondary" data-bs-dismiss="modal">Cancelar</button>
-                        <button type="submit" class="btn btn-brand fw-bold px-4">Salvar rotina</button>
-                    </div>
-                </form>
-            </div>
+                </div>
+                <div class="modal-footer border-top-0 pt-0">
+                    <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary px-4">Salvar Rotina</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>
