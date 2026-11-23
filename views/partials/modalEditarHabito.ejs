@@ -1,0 +1,45 @@
+<div class="modal fade" id="modalEditarHabito" tabindex="-1" aria-labelledby="modalEditarHabitoLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow">
+            <div class="modal-header border-bottom-0 pb-0">
+                <h5 class="modal-title fw-bold" id="modalEditarHabitoLabel">Editar Hábito</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            
+            <!-- O action será preenchido dinamicamente via JS (/habitos/editar/:id) -->
+            <form id="formEditarHabito" method="POST">
+                <div class="modal-body py-4">
+                    
+                    <div class="mb-4">
+                        <label for="editNomeHabito" class="form-label fw-medium">Nome do Hábito</label>
+                        <input type="text" class="form-control form-control-lg" id="editNomeHabito" name="name" required>
+                    </div>
+
+                    <label class="form-label fw-medium d-block mb-2">Dias da semana</label>
+                    <div class="d-flex flex-wrap gap-2">
+                        <% const diasSemana = [
+                            { valor: '0', nome: 'Dom' },
+                            { valor: '1', nome: 'Seg' },
+                            { valor: '2', nome: 'Ter' },
+                            { valor: '3', nome: 'Qua' },
+                            { valor: '4', nome: 'Qui' },
+                            { valor: '5', nome: 'Sex' },
+                            { valor: '6', nome: 'Sáb' }
+                        ]; %>
+                        <% diasSemana.forEach(dia => { %>
+                            <div>
+                                <input type="checkbox" class="btn-check edit-dia-checkbox" name="days_of_week" id="edit_dia_<%= dia.valor %>" value="<%= dia.valor %>" autocomplete="off">
+                                <label class="btn btn-outline-secondary btn-sm px-3" for="edit_dia_<%= dia.valor %>"><%= dia.nome %></label>
+                            </div>
+                        <% }) %>
+                    </div>
+
+                </div>
+                <div class="modal-footer border-top-0 pt-0">
+                    <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary px-4">Salvar Alterações</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

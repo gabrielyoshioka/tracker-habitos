@@ -15,26 +15,58 @@
         <div class="d-flex flex-grow-1 overflow-hidden">
             <div class="flex-grow-1 overflow-auto p-5">
                 <div class="row g-5">
+                    <!-- Coluna 1: Meu dia -->
                     <div class="col-md-6">
-                        <h2 class="fw-bold mb-4 text-dark">Meu dia</h2>
+                        <h2 class="fw-bold mb-3 text-dark">Meu dia</h2>
+
+                        <!-- Barra de Progresso Diário -->
+                        <div class="p-3 mb-4 border rounded-3 bg-white shadow-sm me-4">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="small fw-semibold text-secondary">Progresso de hoje</span>
+                                <span class="small fw-bold text-dark" id="textoProgressoHoje">
+                                    <%= metricas.concluidosHoje %>/<%= metricas.totalHoje %> (<%= metricas.progressoHoje %>%)
+                                </span>
+                            </div>
+                            <div class="progress" style="height: 10px;">
+                                <div class="progress-bar bg-success" id="barraProgressoHoje" role="progressbar"
+                                    style="width: <%= metricas.progressoHoje %>%;"
+                                    aria-valuenow="<%= metricas.progressoHoje %>" aria-valuemin="0" aria-valuemax="100">
+                                </div>
+                            </div>
+                        </div>
                         
                         <% if (habitosHoje && habitosHoje.length > 0) { %>
-                            <div class="d-flex flex-column gap-3 pe-4" id="lista-habitos">
+                            <div class="d-flex flex-column gap-3 pe-4">
                                 <% habitosHoje.forEach(habito => { %>
-                                    <label class="d-flex align-items-center gap-3 p-3 border rounded-3 bg-white shadow-sm" style="cursor: pointer; transition: 0.3s;">
-                                        <input class="form-check-input flex-shrink-0 m-0 fs-5 checkbox-habito" 
-                                            type="checkbox" 
-                                            value="<%= habito.id %>"
-                                            <%= habito.is_completed ? 'checked' : '' %>>
-                                    
-                                        <span class="text-dark fs-5 fw-medium texto-habito <%= habito.is_completed ? 'text-decoration-line-through text-muted' : '' %>">
-                                            <%= habito.name %>
-                                        </span>
-                                    </label>
+                                    <div class="d-flex align-items-center justify-content-between p-3 border rounded-3 bg-white shadow-sm">
+                                        <div class="d-flex align-items-center gap-3">
+                                            <input class="form-check-input checkbox-habito m-0" type="checkbox" 
+                                                data-id="<%= habito.id %>" <%= habito.is_completed ? 'checked' : '' %>>
+                                            <span class="fs-5 <%= habito.is_completed ? 'text-decoration-line-through text-muted' : 'text-dark' %>">
+                                                <%= habito.name %>
+                                            </span>
+                                        </div>
+
+                                        <div class="d-flex align-items-center gap-2">
+                                            <button type="button" class="btn btn-sm btn-outline-secondary border-0 btn-editar-habito"
+                                                    data-bs-toggle="modal" data-bs-target="#modalEditarHabito"
+                                                    data-id="<%= habito.id %>"
+                                                    data-name="<%= habito.name %>"
+                                                    data-days="<%= habito.days_of_week || '' %>"
+                                                    title="Editar hábito">
+                                                <i class="bi bi-pencil"></i>
+                                            </button>
+
+                                            <form action="/habitos/excluir/<%= habito.id %>" method="POST" class="m-0" onsubmit="return confirm('Deseja realmente excluir este hábito? O histórico antigo será mantido.');">
+                                                <button type="submit" class="btn btn-sm btn-outline-danger border-0" title="Excluir hábito">
+                                                    <i class="bi bi-trash"></i>
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </div>
                                 <% }) %>
                             </div>
                             
-                            <!-- CORRIGIDO: Botão adicionado para o usuário continuar criando hábitos -->
                             <button class="btn btn-outline-brand px-4 py-2 mt-4" data-bs-toggle="modal" data-bs-target="#modalHabito">
                                 <i class="bi bi-plus"></i> Novo hábito
                             </button>
@@ -49,20 +81,78 @@
                         <% } %>
                     </div>
 
+                    <!-- Coluna 2: Minha semana -->
                     <div class="col-md-6">
-                        <h2 class="fw-bold mb-4 text-dark">Minha semana</h2>
+                        <h2 class="fw-bold mb-3 text-dark">Minha semana</h2>
+
+                        <!-- Barra de Desempenho Semanal Geral -->
+                        <div class="p-3 mb-4 border rounded-3 bg-white shadow-sm me-4">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="small fw-semibold text-secondary">Consistência semanal geral</span>
+                                <span class="small fw-bold text-dark">
+                                    <%= metricas.feitosGeralSemana %>/<%= metricas.metaGeralSemana %> check-ins (<%= metricas.progressoGeralSemana %>%)
+                                </span>
+                            </div>
+                            <div class="progress" style="height: 10px;">
+                                <div class="progress-bar bg-primary" role="progressbar"
+                                    style="width: <%= metricas.progressoGeralSemana %>%;"
+                                    aria-valuenow="<%= metricas.progressoGeralSemana %>" aria-valuemin="0" aria-valuemax="100">
+                                </div>
+                            </div>
+                        </div>
                         
                         <% if (rotinasSemana && rotinasSemana.length > 0) { %>
                             <div class="d-flex flex-column gap-3 pe-4">
                                 <% rotinasSemana.forEach(rotina => { %>
                                     <div class="p-4 border rounded-3 bg-white shadow-sm">
-                                        <h5 class="fw-bold text-dark mb-3"><%= rotina.name %></h5>
+                                        <div class="d-flex align-items-center justify-content-between mb-2">
+                                            <h5 class="fw-bold text-dark mb-0"><%= rotina.name %></h5>
+
+                                            <div class="d-flex align-items-center gap-2">
+                                                <button type="button" class="btn btn-sm btn-outline-secondary border-0 btn-editar-rotina"
+                                                        data-bs-toggle="modal" data-bs-target="#modalEditarRotina"
+                                                        data-id="<%= rotina.id %>"
+                                                        data-name="<%= rotina.name %>"
+                                                        data-habitos="<%= rotina.habitos.map(h => h.id).join(',') %>"
+                                                        title="Editar rotina">
+                                                    <i class="bi bi-pencil"></i>
+                                                </button>
+
+                                                <form action="/rotinas/excluir/<%= rotina.id %>" method="POST" class="m-0" onsubmit="return confirm('Deseja realmente excluir esta rotina? Os hábitos individuais serão mantidos.');">
+                                                    <button type="submit" class="btn btn-sm btn-outline-danger border-0" title="Excluir rotina">
+                                                        <i class="bi bi-trash"></i>
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </div>
+
+                                        <!-- Progress Bar Semanal da Rotina -->
+                                        <div class="mb-3">
+                                            <div class="d-flex justify-content-between align-items-center mb-1">
+                                                <span class="text-muted small">Conclusão na semana</span>
+                                                <span class="small fw-bold <%= rotina.progressoSemanal === 100 ? 'text-success' : 'text-dark' %>">
+                                                    <%= rotina.concluidosSemanal %>/<%= rotina.metaSemanal %> (<%= rotina.progressoSemanal %>%)
+                                                </span>
+                                            </div>
+                                            <div class="progress" style="height: 8px;">
+                                                <div class="progress-bar <%= rotina.progressoSemanal === 100 ? 'bg-success' : 'bg-info' %>"
+                                                    role="progressbar"
+                                                    style="width: <%= rotina.progressoSemanal %>%;"
+                                                    aria-valuenow="<%= rotina.progressoSemanal %>" aria-valuemin="0" aria-valuemax="100">
+                                                </div>
+                                            </div>
+                                        </div>
                                         
-                                        <% if (rotina.habitos.length > 0) { %>
+                                        <% if (rotina.habitos && rotina.habitos.length > 0) { %>
                                             <ul class="list-unstyled mb-0 d-flex flex-column gap-2">
                                                 <% rotina.habitos.forEach(habito => { %>
-                                                    <li class="text-secondary d-flex align-items-center gap-2">
-                                                        <i class="bi bi-dot fs-4"></i> <%= habito.name %>
+                                                    <li class="text-secondary d-flex align-items-center justify-content-between">
+                                                        <span class="d-flex align-items-center gap-2">
+                                                            <i class="bi bi-dot fs-4"></i> <%= habito.name %>
+                                                        </span>
+                                                        <span class="badge bg-light text-secondary border">
+                                                            <%= habito.feitosSemana %>/<%= habito.metaSemana %> dias
+                                                        </span>
                                                     </li>
                                                 <% }) %>
                                             </ul>
@@ -86,11 +176,9 @@
                             </div>
                         <% } %>
                     </div>
-
                 </div>
             </div>
 
-            <!-- Barra Lateral Injetada Aqui -->
             <%- include('partials/sidebar') %>
 
         </div>
@@ -98,6 +186,8 @@
 
     <%- include('partials/modalHabito') %>
     <%- include('partials/modalRotina') %>
+    <%- include('partials/modalEditarHabito') %>
+    <%- include('partials/modalEditarRotina') %>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="/js/dashboard.js"></script>

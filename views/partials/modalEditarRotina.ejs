@@ -1,0 +1,41 @@
+<div class="modal fade" id="modalEditarRotina" tabindex="-1" aria-labelledby="modalEditarRotinaLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow">
+            <div class="modal-header border-bottom-0 pb-0">
+                <h5 class="modal-title fw-bold" id="modalEditarRotinaLabel">Editar Rotina</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            
+            <!-- O action será definido dinamicamente via JS (/rotinas/editar/:id) -->
+            <form id="formEditarRotina" method="POST">
+                <div class="modal-body py-4">
+                    
+                    <div class="mb-4">
+                        <label for="editNomeRotina" class="form-label fw-medium">Nome da Rotina</label>
+                        <input type="text" class="form-control form-control-lg" id="editNomeRotina" name="name" required>
+                    </div>
+
+                    <h6 class="fw-bold mb-3">Quais hábitos fazem parte dessa rotina?</h6>
+                    
+                    <div class="d-flex flex-column gap-2" style="max-height: 250px; overflow-y: auto;">
+                        <% if (habitosExistentes && habitosExistentes.length > 0) { %>
+                            <% habitosExistentes.forEach(habito => { %>
+                                <label class="d-flex align-items-center gap-2 p-2 border rounded bg-light" style="cursor: pointer;">
+                                    <input class="form-check-input m-0 edit-rotina-habito-checkbox" type="checkbox" name="habitos" value="<%= habito.id %>">
+                                    <span class="text-dark"><%= habito.name %></span>
+                                </label>
+                            <% }) %>
+                        <% } else { %>
+                            <p class="text-muted small">Você ainda não possui hábitos ativos cadastrados.</p>
+                        <% } %>
+                    </div>
+
+                </div>
+                <div class="modal-footer border-top-0 pt-0">
+                    <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary px-4">Salvar Alterações</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

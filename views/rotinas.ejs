@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Minhas Rotinas - Habit Tracker</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="bg-light overflow-hidden">
+    <div class="d-flex flex-column vh-100">
+        
+        <%- include('partials/topbar') %>
+
+        <div class="d-flex flex-grow-1 overflow-hidden">
+            <div class="flex-grow-1 overflow-auto p-5">
+                <div class="d-flex align-items-center justify-content-between mb-4">
+                    <div>
+                        <h2 class="fw-bold text-dark mb-1">Minhas Rotinas</h2>
+                        <p class="text-secondary mb-0">Organize seus hábitos em blocos de atividades do dia.</p>
+                    </div>
+
+                    <button class="btn btn-outline-brand px-4 py-2" data-bs-toggle="modal" data-bs-target="#modalRotina">
+                        <i class="bi bi-plus"></i> Nova rotina
+                    </button>
+                </div>
+
+                <% if (rotinas && rotinas.length > 0) { %>
+                    <div class="row g-4">
+                        <% rotinas.forEach(rotina => { %>
+                            <div class="col-md-6">
+                                <div class="p-4 border rounded-3 bg-white shadow-sm h-100">
+                                    <div class="d-flex align-items-center justify-content-between mb-3">
+                                        <h5 class="fw-bold text-dark mb-0"><%= rotina.name %></h5>
+
+                                        <div class="d-flex align-items-center gap-2">
+                                            <button type="button" class="btn btn-sm btn-outline-secondary border-0 btn-editar-rotina"
+                                                    data-bs-toggle="modal" data-bs-target="#modalEditarRotina"
+                                                    data-id="<%= rotina.id %>"
+                                                    data-name="<%= rotina.name %>"
+                                                    data-habitos="<%= rotina.habitos.map(h => h.id).join(',') %>"
+                                                    title="Editar rotina">
+                                                <i class="bi bi-pencil"></i>
+                                            </button>
+
+                                            <form action="/rotinas/excluir/<%= rotina.id %>" method="POST" class="m-0" onsubmit="return confirm('Deseja realmente excluir esta rotina? Os hábitos individuais serão mantidos.');">
+                                                <button type="submit" class="btn btn-sm btn-outline-danger border-0" title="Excluir rotina">
+                                                    <i class="bi bi-trash"></i>
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </div>
+
+                                    <% if (rotina.habitos && rotina.habitos.length > 0) { %>
+                                        <ul class="list-unstyled mb-0 d-flex flex-column gap-2">
+                                            <% rotina.habitos.forEach(habito => { %>
+                                                <li class="text-secondary d-flex align-items-center gap-2">
+                                                    <i class="bi bi-dot fs-4"></i> <%= habito.name %>
+                                                </li>
+                                            <% }) %>
+                                        </ul>
+                                    <% } else { %>
+                                        <p class="text-muted small mb-0">Nenhum hábito associado a esta rotina.</p>
+                                    <% } %>
+                                </div>
+                            </div>
+                        <% }) %>
+                    </div>
+                <% } else { %>
+                    <div class="p-5 border rounded-3 bg-white text-center">
+                        <p class="text-secondary fs-5 mb-4">Você ainda não possui rotinas cadastradas.</p>
+                        <button class="btn btn-outline-brand px-4 py-2" data-bs-toggle="modal" data-bs-target="#modalRotina">
+                            <i class="bi bi-plus"></i> Criar primeira rotina
+                        </button>
+                    </div>
+                <% } %>
+            </div>
+
+            <%- include('partials/sidebar') %>
+        </div>
+    </div>
+
+    <%- include('partials/modalRotina') %>
+    <%- include('partials/modalEditarRotina') %>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/js/dashboard.js"></script>
+</body>
+</html>

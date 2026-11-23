@@ -55,3 +55,64 @@ exports.toggleCheckin = (req, res) => {
         });
     });
 };
+
+exports.editarHabito = (req, res) => {
+    const userId = req.session.userId;
+    const habitId = req.params.id;
+    const { name, days_of_week } = req.body;
+
+    if (!name) {
+        return res.status(400).send("O nome do hábito é obrigatório.");
+    }
+
+    let diasFormatados = '';
+    if (days_of_week) {
+        diasFormatados = Array.isArray(days_of_week) ? days_of_week.join(',') : days_of_week;
+    }
+
+    // Garante que o usuário só consiga editar um hábito que pertence a ele (user_id = ?)
+    const sql = `UPDATE habits SET name = ?, days_of_week = ? WHERE id = ? AND user_id = ?`;
+
+    db.run(sql, [name, diasFormatados, habitId, userId], function(err) {
+        if (err) {
+            console.error("Erro ao editar hábito:", err.message);
+            return res.status(500).send("Erro ao atualizar o hábito.");
+        }
+        res.redirect('/');
+    });
+};
+
+exports.inativarHabito = (req, res) => {
+    const userId = req.session.userId;
+    const habitId = req.params.id;
+
+    const sql = `UPDATE habits SET is_active = 0 WHERE id = ? AND user_id = ?`;
+
+    db.run(sql, [habitId, userId], function(err) {
+        if (err) {
+            console.error("Erro ao inativar hábito:", err.message);
+            return res.status(500).send("Erro ao excluir o hábito.");
+        }
+        res.redirect('/');
+    });
+};
+
+exports.listarHabitos = (req, res) => {
+    const userId = req.session.userId;
+
+    const sql = `
+        SELECT id, name, days_of_week
+        FROM habits
+        WHERE user_id = ? AND is_active = 1
+        ORDER BY id DESC
+    `;
+
+    db.all(sql, [userId], (err, habitos) => {
+        if (err) {
+            console.error("Erro ao listar hábitos:", err.message);
+            habitos = [];
+        }
+
+        res.render('habitos', { habitos });
+    });
+};

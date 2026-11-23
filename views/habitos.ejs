@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Meus Hábitos - Habit Tracker</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="bg-light overflow-hidden">
+    <div class="d-flex flex-column vh-100">
+        
+        <%- include('partials/topbar') %>
+
+        <div class="d-flex flex-grow-1 overflow-hidden">
+            <div class="flex-grow-1 overflow-auto p-5">
+                <div class="d-flex align-items-center justify-content-between mb-4">
+                    <div>
+                        <h2 class="fw-bold text-dark mb-1">Meus Hábitos</h2>
+                        <p class="text-secondary mb-0">Gerencie todos os seus hábitos cadastrados e os dias da semana.</p>
+                    </div>
+
+                    <button class="btn btn-outline-brand px-4 py-2" data-bs-toggle="modal" data-bs-target="#modalHabito">
+                        <i class="bi bi-plus"></i> Novo hábito
+                    </button>
+                </div>
+
+                <% const nomesDias = { '0': 'Dom', '1': 'Seg', '2': 'Ter', '3': 'Qua', '4': 'Qui', '5': 'Sex', '6': 'Sáb' }; %>
+
+                <% if (habitos && habitos.length > 0) { %>
+                    <div class="d-flex flex-column gap-3">
+                        <% habitos.forEach(habito => { %>
+                            <% const diasLista = habito.days_of_week ? habito.days_of_week.split(',').filter(d => d !== '') : []; %>
+
+                            <div class="d-flex align-items-center justify-content-between p-4 border rounded-3 bg-white shadow-sm">
+                                <div>
+                                    <h5 class="fw-bold text-dark mb-2"><%= habito.name %></h5>
+                                    
+                                    <div class="d-flex flex-wrap gap-1">
+                                        <% if (diasLista.length === 0 || diasLista.length === 7) { %>
+                                            <span class="badge bg-light text-secondary border">Todos os dias</span>
+                                        <% } else { %>
+                                            <% diasLista.forEach(dia => { %>
+                                                <span class="badge bg-light text-dark border"><%= nomesDias[dia] %></span>
+                                            <% }) %>
+                                        <% } %>
+                                    </div>
+                                </div>
+
+                                <div class="d-flex align-items-center gap-2">
+                                    <button type="button" class="btn btn-sm btn-outline-secondary border-0 btn-editar-habito"
+                                            data-bs-toggle="modal" data-bs-target="#modalEditarHabito"
+                                            data-id="<%= habito.id %>"
+                                            data-name="<%= habito.name %>"
+                                            data-days="<%= habito.days_of_week || '' %>"
+                                            title="Editar hábito">
+                                        <i class="bi bi-pencil"></i>
+                                    </button>
+
+                                    <form action="/habitos/excluir/<%= habito.id %>" method="POST" class="m-0" onsubmit="return confirm('Deseja realmente excluir este hábito? O histórico antigo será mantido.');">
+                                        <button type="submit" class="btn btn-sm btn-outline-danger border-0" title="Excluir hábito">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        <% }) %>
+                    </div>
+                <% } else { %>
+                    <div class="p-5 border rounded-3 bg-white text-center">
+                        <p class="text-secondary fs-5 mb-4">Você ainda não possui hábitos ativos cadastrados.</p>
+                        <button class="btn btn-outline-brand px-4 py-2" data-bs-toggle="modal" data-bs-target="#modalHabito">
+                            <i class="bi bi-plus"></i> Criar primeiro hábito
+                        </button>
+                    </div>
+                <% } %>
+            </div>
+
+            <%- include('partials/sidebar') %>
+        </div>
+    </div>
+
+    <%- include('partials/modalHabito') %>
+    <%- include('partials/modalEditarHabito') %>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/js/dashboard.js"></script>
+</body>
+</html>
